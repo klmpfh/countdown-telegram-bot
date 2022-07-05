@@ -31,34 +31,28 @@ bot.onText(/^\/start$/, (msg) => {
 // ^\d{4}[0-2]\d[0-3]\d[0-2]\d[0-5]\d$
 
 bot.onText(/^\/start[_, ](:?\d{4})$/, (msg, reg) => {
-    const t = dayjs(reg[1], "YYYY");
-    const d = t.fromNow();
-    bot.sendMessage(msg.chat.id, d);
+    sendEasy(msg.chat.id, reg, "YYYY");
 });
 
 bot.onText(/^\/start[_, ](:?\d{4}[0-2]\d)$/, (msg, reg) => {
-    const t = dayjs(reg[1], "YYYYMM");
-    const d = t.fromNow();
-    bot.sendMessage(msg.chat.id, d);
+    sendEasy(msg.chat.id, reg, "YYYYMM");
 });
 
 bot.onText(/^\/start[_, ](:?\d{4}[0-2]\d[0-3]\d)$/, (msg, reg) => {
-    const t = dayjs(reg[1], "YYYYMMDD");
-    const d = t.fromNow();
-    bot.sendMessage(msg.chat.id, d);
+    sendEasy(msg.chat.id, reg, "YYYYMMDD");
 });
 
 bot.onText(/^\/start[_, ](:?\d{4}[0-2]\d[0-3]\d[0-2]\d)$/, (msg, reg) => {
-    const t = dayjs(reg[1], "YYYYMMDDHH");
-    const d = t.fromNow();
-    bot.sendMessage(msg.chat.id, d);
+    sendEasy(msg.chat.id, reg, "YYYYMMDDHH");
 });
 
 bot.onText(/^\/start[_, ](:?\d{4}[0-2]\d[0-3]\d[0-2]\d[0-5]\d)$/, (msg, reg) => {
-    const t = dayjs(reg[1], "YYYYMMDDHHmm");
-    const d = t.fromNow();
-    bot.sendMessage(msg.chat.id, d);
+    sendEasy(msg.chat.id, reg, "YYYYMMDDHHmm");
 });
+
+function sendEasy(chat_id, reg, format){
+    bot.sendMessage(chat_id, dayjs(reg[1], format).fromNow() + '\n' + reg[0]);
+}
 
 
 
