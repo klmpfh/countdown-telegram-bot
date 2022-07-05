@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "dayjs": "^1.11.3",
+    "node-telegram-bot-api": "^0.58.0"
+  }
+}
