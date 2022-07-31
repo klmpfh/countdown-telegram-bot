@@ -68,8 +68,8 @@ function ms2array(ms) {
 
 function sendEasy(chat_id, reg, format, now){
 
-    const past = "↦ ";
-    const future = "⇥ ";
+    const past = "🔙 ";
+    const future = "🔜 ";
 
     const dif = dayjs(reg[1], format).diff(dayjs.unix(now));
     const duration = ms2array(dif);
