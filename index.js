@@ -47,7 +47,7 @@ bot.onText(/^\/start[_, ](:?\d{4}[0-2]\d[0-3]\d[0-2]\d[0-5]\d)$/, (msg, reg) => 
 });
 
 function ms2array(ms) {
-    if (ms < 0) ms = ms * -1;
+    if(ms < 0) ms = ms * -1;
     let arr = [];
     // 0, 1, 2, 3, 4, 5
     // y, d, h, m, s, ms
@@ -66,7 +66,7 @@ function ms2array(ms) {
     return arr;
 }
 
-function sendEasy(chat_id, reg, format, now){
+function sendEasy(chat_id, reg, format, now) {
 
     const past = "🔙 ";
     const future = "🔜 ";
@@ -74,10 +74,10 @@ function sendEasy(chat_id, reg, format, now){
     const dif = dayjs(reg[1], format).diff(dayjs.unix(now));
     const duration = ms2array(dif);
     let str = dif > 0 ? future : past;
-    if (duration[0] > 0) str += duration[0] + "Y ";
-    if (duration[1] > 0) str += duration[1] + "D ";
-    str += (''+duration[2]).padStart(2,'0') + ":";
-    str += (''+duration[3]).padStart(2,'0');
+    if(duration[0] > 0) str += duration[0] + "Y ";
+    if(duration[1] > 0) str += duration[1] + "D ";
+    str += ('' + duration[2]).padStart(2, '0') + ":";
+    str += ('' + duration[3]).padStart(2, '0');
 
     bot.sendMessage(chat_id, str + '\n\/start_' + reg[1]);
 }
