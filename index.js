@@ -24,6 +24,10 @@ bot.onText(/^\/start$/, (msg) => {
     bot.sendMessage(msg.chat.id, `Hey send me a timestamp and i can say u the offset.\n\n\/start_YYYY[MM[DD[HH[mm]]]]\n\/start_${dayjs().format('YYYYMMDD')}\n\n...äääähhhhh .... local time in germany ... sorry`);
 });
 
+bot.onText(/^\/now$/, (msg) => {
+    sendEasy(msg.chat.id, [null,dayjs().format('YYYYMMDDHHmm')], "YYYYMMDDHHmm", msg.date);
+});
+
 // ^\d{4}[0-2]\d[0-3]\d[0-2]\d[0-5]\d$
 
 bot.onText(/^\/start[_, ](:?\d{4})$/, (msg, reg) => {
