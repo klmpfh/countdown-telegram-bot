@@ -12,8 +12,12 @@ const dayjs = require('dayjs');
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(bot_token, { polling: true });
 
+const cron = require('node-cron');
+let msg_storage = [];
+
 // Listen for any kind of message. There are different kinds of
 // messages.
+// TESTING STUFF ...
 bot.on('callback_query', (msg) => {
 
     console.log(msg)
@@ -25,7 +29,7 @@ bot.onText(/^\/start$/, (msg) => {
 });
 
 bot.onText(/^\/now$/, (msg) => {
-    sendEasy(msg.chat.id, [null,dayjs().format('YYYYMMDDHHmm')], "YYYYMMDDHHmm", msg.date);
+    sendEasy(msg.chat.id, [null, dayjs().format('YYYYMMDDHHmm')], "YYYYMMDDHHmm", msg.date);
 });
 
 // ^\d{4}[0-2]\d[0-3]\d[0-2]\d[0-5]\d$
@@ -72,6 +76,16 @@ function ms2array(ms) {
 
 function sendEasy(chat_id, reg, format, now) {
 
+    bot.sendMessage(chat_id, getMessageString(reg, format, now))
+        .then((msg) => {
+            msg_storage.push({ sending: { chat_id, reg, format, now }, feedback: msg });
+        })
+        .catch(sendingError => {
+            console.error("There was a error while sendiung and save the message.", sendingError);
+        });
+}
+
+function getMessageString(reg, format, now) {
     const past = "🔙 ";
     const future = "🔜 ";
 
@@ -83,8 +97,40 @@ function sendEasy(chat_id, reg, format, now) {
     str += ('' + duration[2]).padStart(2, '0') + ":";
     str += ('' + duration[3]).padStart(2, '0');
 
-    bot.sendMessage(chat_id, str + '\n\/start_' + reg[1]);
+    return str + '\n\/start_' + reg[1];
 }
+
+
+// here comes the loop for msg edit
+cron.schedule('* * * * *', () => { // every minute
+
+    // cleaning up old stuff
+    // deleting entries after 1 day
+
+    msg_storage = msg_storage.filter((msg) => {
+        return dayjs.unix(msg.feedback.date).isBefore(dayjs.unix(msg.feedback.date).add(1, 'day'));
+    });
+
+    msg_storage.forEach(data => {
+
+        // get text
+        const str = getMessageString(data.sending.reg, data.sending.format, Math.floor(Date.now()/1000));
+
+        // do not update, if the text is the same
+        if(str == data.feedback.text) return;
+
+        // update msg
+        bot.editMessageText(str, { chat_id: data.feedback.chat.id, message_id: data.feedback.message_id })
+            .then(() => {
+
+            })
+            .catch(updateError => {
+                console.error("There was a error while updating the message.", updateError);
+            })
+    });
+
+});
+
 
 // errors ... sad
 bot.on('polling_error', function (err) {
