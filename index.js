@@ -104,32 +104,59 @@ function getMessageString(reg, format, now) {
 // here comes the loop for msg edit
 cron.schedule('* * * * *', () => { // every minute
 
+    setTimeout(runningEveryMinute, 1 * 1000);
+
+});
+
+function runningEveryMinute() {
+
     // cleaning up old stuff
     // deleting entries after 1 day
 
     msg_storage = msg_storage.filter((msg) => {
-        return dayjs.unix(msg.feedback.date).isBefore(dayjs.unix(msg.feedback.date).add(1, 'day'));
-    });
 
-    msg_storage.forEach(data => {
+        if(dayjs().isBefore(dayjs.unix(msg.feedback.date).add(3, 'minutes'))) {
+            return true; // all fine ...
+        }
 
-        // get text
-        const str = getMessageString(data.sending.reg, data.sending.format, Math.floor(Date.now()/1000));
-
-        // do not update, if the text is the same
-        if(str == data.feedback.text) return;
-
-        // update msg
-        bot.editMessageText(str, { chat_id: data.feedback.chat.id, message_id: data.feedback.message_id })
+        // this is out ...
+        // ☠️
+        bot.editMessageText(
+            msg.feedback.text + '\n☠️ no auto update anymore',
+            {
+                chat_id: msg.feedback.chat.id,
+                message_id: msg.feedback.message_id
+            }
+        )
             .then(() => {
 
             })
             .catch(updateError => {
                 console.error("There was a error while updating the message.", updateError);
             })
+
+        return false;
     });
 
-});
+    msg_storage.forEach(data => {
+
+        // get text
+        const str = getMessageString(data.sending.reg, data.sending.format, Math.floor(Date.now() / 1000));
+
+        // do not update, if the text is the same
+        if(str == data.feedback.text) return;
+
+        // update msg
+        bot.editMessageText(str, { chat_id: data.feedback.chat.id, message_id: data.feedback.message_id })
+            .then((new_feedback) => {
+                data.feedback = new_feedback;
+            })
+            .catch(updateError => {
+                console.error("There was a error while updating the message.", updateError);
+            })
+    });
+
+}
 
 
 // errors ... sad
