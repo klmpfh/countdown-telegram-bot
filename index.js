@@ -17,15 +17,6 @@ const bot = new TelegramBot(bot_token, { polling: true });
 const cron = require('node-cron');
 let msg_storage = [];
 
-// Listen for any kind of message. There are different kinds of
-// messages.
-// TESTING STUFF ...
-bot.on('callback_query', (msg) => {
-
-    console.log(msg)
-
-});
-
 bot.onText(/^\/start$/, (msg) => {
     bot.sendMessage(msg.chat.id, `Hey send me a timestamp and i can say u the offset.\n\n\/start_YYYY[MM[DD[HH[mm]]]]\n\/start_${dayjs().format('YYYYMMDD')}\n\n...äääähhhhh .... local time in germany ... sorry`);
 });
@@ -165,12 +156,13 @@ function runningEveryMinute() {
 // errors ... sad
 bot.on('polling_error', function (err) {
     console.error('polling_error', err);
-})
+});
 bot.on('webhook_error', function (err) {
     console.error('webhook_error', err);
-})
+});
 bot.on('error', function (err) {
     console.error('error', err);
-})
+});
+
 // self checl
 bot.getMe().then(data => console.log(data));
