@@ -115,7 +115,7 @@ function runningEveryMinute() {
 
     msg_storage = msg_storage.filter((msg) => {
 
-        if(dayjs().isBefore(dayjs.unix(msg.feedback.date).add(1, 'day'))) {
+        if(dayjs().isBefore(dayjs.unix(msg.feedback.date).add(12, 'hours'))) {
             return true; // all fine ...
         }
 
