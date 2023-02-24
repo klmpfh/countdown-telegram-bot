@@ -172,3 +172,5 @@ bot.on('webhook_error', function (err) {
 bot.on('error', function (err) {
     console.error('error', err);
 })
+// self checl
+bot.getMe().then(data => console.log(data));
