@@ -89,7 +89,8 @@ function getMessageString(reg, format, now) {
     const past = "🔙 ";
     const future = "🔜 ";
 
-    const dif = dayjs(reg[1], format).diff(dayjs.unix(now));
+    let dif = dayjs(reg[1], format).diff(dayjs.unix(now));
+    dif = dif > 0 ? dif + 60*1000 : dif; // with this, there ist no longe 2 minutes long "0"
     const duration = ms2array(dif);
     let str = dif > 0 ? future : past;
     if(duration[0] > 0) str += duration[0] + "Y ";
