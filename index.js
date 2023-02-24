@@ -2,6 +2,8 @@
  *
  */
 
+process.env.NTBA_FIX_319 = 1;
+
 const bot_token = process.argv[2];
 
 if(!bot_token) throw new Error("pleas start this script this your bot token as the first argument.");
